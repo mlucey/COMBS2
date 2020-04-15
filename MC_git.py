@@ -44,6 +44,21 @@ def prior_d_mock(d,hlp,dists,cts):
     unp = np.interp(dist,dists,cts)
     return np.log(unp)
 
+def dmode(L,p,sp):
+    #def func(d,L,p,sp):
+        #return (d**3/L)-(2*d**2)+(p/sp**2*d)-(1/sp**2)
+    #return op.fsolve(func,1/p,args=(L,p,sp))
+    coeff = [1/L,-2,p/sp**2,-1/sp**2]
+    roots = np.roots(coeff)
+    roots = roots[np.where(np.isreal(roots))[0]]
+    roots= roots.real
+    if len(roots) ==1:
+        return roots
+    if len(roots) >1 and p>0:
+        return min(roots)
+    if len(roots)>1 and p<0:
+        return roots[np.where(roots>0)[0]]
+
 
 def MC(meanv,icov,L,hlp,dists,cts,ndim=3,nwalkers=100,burnsteps = 100,nsteps=1000):
     ndim, nwalkers = ndim, nwalkers
